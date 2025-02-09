@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tic Tac Toe Game</title>
+  <style>
+    /* CSS untuk tampilan papan permainan */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 5px;
+      margin: 20px auto;
+      width: 310px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #f0f0f0;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <div id="board"></div>
+  <div id="message"></div>
+  <button onclick="restart()">Restart</button>
+
+  <script>
+    // JavaScript untuk logika permainan Tic Tac Toe
+
+    const boardElement = document.getElementById('board');
+    const messageElement = document.getElementById('message');
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    // Kondisi menang untuk permainan
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    // Fungsi untuk menangani klik pada setiap sel
+    function handleCellClick(e) {
+      const index = e.target.getAttribute('data-index');
+      if (board[index] !== '' || !gameActive) {
+        return;
+      }
+      board[index] = currentPlayer;
+      e.target.textContent = currentPlayer;
+      checkResult();
+      if (gameActive) {
+        currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+        messageElement.textContent = 'Giliran: ' + currentPlayer;
+      }
+    }
+
+    // Fungsi untuk memeriksa hasil permainan
+    function checkResult() {
+      let roundWon = false;
+      for (let condition of winningConditions) {
+        const [a, b, c] = condition;
+        if (board[a] === '' || board[b] === '' || board[c] === '') {
+          continue;
+        }
+        if (board[a] === board[b] && board[b] === board[c]) {
+          roundWon = true;
+          break;
+        }
+      }
+
+      if (roundWon) {
+        messageElement.textContent = 'Pemain ' + currentPlayer + ' menang!';
+        gameActive = false;
+        return;
+      }
+
+      if (!board.includes('')) {
+        messageElement.textContent = 'Permainan seri!';
+        gameActive = false;
+      }
+    }
+
+    // Fungsi untuk memulai ulang permainan
+    function restart() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      gameActive = true;
+      messageElement.textContent = 'Giliran: ' + currentPlayer;
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(cell => cell.textContent = '');
+    }
+
+    // Membuat papan permainan
+    function createBoard() {
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.setAttribute('data-index', i);
+        cell.addEventListener('click', handleCellClick);
+        boardElement.appendChild(cell);
+      }
+      messageElement.textContent = 'Giliran: ' + currentPlayer;
+    }
+
+    // Inisialisasi permainan
+    createBoard();
+  </script>
+</body>
+</html>
