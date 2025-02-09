@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kerangka Konsep Diagram</title>
+  <!-- Menyertakan Viz.js dari CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+    #diagram {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kerangka Konsep</h1>
+  <div id="diagram"></div>
+
+  <script>
+    // Kode DOT untuk diagram kerangka konsep
+    var dot = `
+      digraph KerangkaKonsep {
+        // Mengatur tampilan node sebagai persegi panjang dengan sudut membulat
+        node [shape=box, style=rounded, fontname="Arial"];
+
+        // Mendefinisikan node untuk masing-masing variabel
+        X1 [label="Pelatihan (X1)"];
+        X2 [label="Pengembangan (X2)"];
+        M  [label="Work-Life Balance (M)"];
+        Y  [label="Kinerja Karyawan (Y)"];
+
+        // Mendefinisikan hubungan antar node
+        X1 -> M;
+        X2 -> M;
+        M  -> Y;
+      }
+    `;
+
+    // Inisialisasi Viz.js dan render diagram
+    var viz = new Viz();
+    viz.renderSVGElement(dot)
+      .then(function(element) {
+        document.getElementById('diagram').appendChild(element);
+      })
+      .catch(error => {
+        console.error(error);
+        // Jika terjadi error, buat instance baru Viz.js
+        viz = new Viz();
+      });
+  </script>
+</body>
+</html>
